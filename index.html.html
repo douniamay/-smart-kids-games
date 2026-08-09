@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عالم الألعاب الذكية للأطفال</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Cairo', sans-serif;
+        background: linear-gradient(135deg, #A18CD1 0%, #FBC2EB 100%);
+        margin: 0; padding: 0; color: #333;
+    }
+    header {
+        background: #FF6B6B; color: white; padding: 25px; text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    header h1 { margin: 0; font-size: 2.8em; font-weight: 900; }
+   .container { max-width: 1000px; margin: 20px auto; padding: 20px; }
+   .game-section {
+        background: white; border-radius: 25px; padding: 30px; margin-bottom: 40px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 5px solid #FFD93D; text-align: center;
+    }
+   .game-section h2 { color: #FF6B6B; font-size: 2em; margin-top: 0; }
+
+    /* البازل */
+   .puzzle {
+        display: grid; grid-template-columns: repeat(3, 110px); grid-template-rows: repeat(3, 110px);
+        gap: 6px; width: 342px; margin: 20px auto; border: 6px solid #4ECDC4;
+        border-radius: 18px; background: #4ECDC4; padding: 6px;
+    }
+   .piece {
+        width: 110px; height: 110px; background-size: 330px 330px; border-radius: 12px;
+        cursor: grab; transition: transform 0.2s; border: 2px solid white;
+    }
+   .piece:hover { transform: scale(1.05); }
+
+    /* الذاكرة */
+    #memory-game {
+        display:grid; grid-template-columns: repeat(4, 100px); gap:15px; justify-content:center; margin:20px auto;
+    }
+   .memory-card {
+        width: 100px; height: 100px; background: linear-gradient(145deg, #4ECDC4, #45B7B8);
+        border-radius: 18px; display: flex; align-items: center; justify-content: center;
+        font-size: 50px; cursor: pointer; transition: all 0.4s; border: 4px solid #fff;
+        box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+    }
+   .memory-card:hover { transform: translateY(-5px); }
+   .memory-card.flipped { background: linear-gradient(145deg, #FFD93D, #F7B801); transform: rotateY(180deg); }
+   .memory-card.matched { background: linear-gradient(145deg, #95E1D3, #6BCBAE); transform: scale(0.92); }
+
+    button {
+        background: #FF6B6B; color: white; border: none; padding: 14px 30px; border-radius: 50px;
+        font-size: 20px; font-family: 'Cairo', sans-serif; font-weight: 700; cursor: pointer;
+        margin: 10px; transition: all 0.3s; box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+    }
+    button:hover { background: #FF5252; transform: translateY(-3px); }
+    footer { text-align: center; padding: 25px; background: #333; color: white; margin-top: 30px; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🎈 عالم الألعاب الذكية 🎈</h1>
+    <p>اتعلم والعب مع شخصياتك الكرتونية المفضلة!</p>
+</header>
+
+<div class="container">
+
+    <div class="game-section">
+        <h2>🧩 بازل الكرتون</h2>
+        <p>رتب القطع عشان تكمل الصورة!</p>
+        <div class="puzzle" id="puzzle"></div>
+        <button onclick="shuffle()">🔀 خلط القطع</button>
+        <button onclick="newImage()">🖼️ صورة جديدة</button>
+    </div>
+
+    <div class="game-section">
+        <h2>🃏 لعبة الذاكرة</h2>
+        <p>دوري على الأزواج المتطابقة من الكرتون!</p>
+        <div id="memory-game"></div>
+        <p>النتيجة: <span id="score">0</span> / 4 أزواج</p>
+        <button onclick="startMemoryGame()">🎮 لعبة جديدة</button>
+    </div>
+
+</div>
+
+<footer>
+    <p>صنع بحب للأطفال الأذكياء ❤️ | 2026</p>
+</footer>
+
+<script>
+// 1. كود البازل
+const images = [
+    'https://placehold.co/330x330/FF6B6B/FFFFFF/png?text=SpongeBob',
+    'https://placehold.co/330x330/4ECDC4/FFFFFF/png?text=Tom+and+Jerry',
+    'https://placehold.co/330x330/FFD93D/000/png?text=Mickey+Mouse'
+];
+let currentImage = 0; let pieces = [];
+const puzzle = document.getElementById('puzzle');
+
+function createPuzzle() {
+    puzzle.innerHTML = ''; pieces = [];
+    for(let i = 0; i < 9; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'piece';
+        piece.style.backgroundImage = `url(${images[currentImage]})`;
+        piece.style.backgroundPosition = `-${(i%3)*110}px -${Math.floor(i/3)*110}px`;
+        piece.draggable = true; piece.dataset.index = i;
+        puzzle.appendChild(piece); pieces.push(piece);
+    }
+    addDragEvents();
+}
+function shuffle() {
+    for(let i = pieces.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        puzzle.appendChild(pieces[j]); puzzle.appendChild(pieces[i]);
+        [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+    }
+}
+function newImage() { currentImage = (currentImage + 1) % images.length; createPuzzle(); shuffle(); }
+
+// سحب وافلات بسيط
+function addDragEvents() {
+    let dragged;
+    puzzle.addEventListener('dragstart', e => { dragged = e.target; });
+    puzzle.addEventListener('dragover', e => e.preventDefault());
+    puzzle.addEventListener('drop', e => {
+        if(e.target.className == 'piece' && dragged!= e.target){
+            let temp = dragged.style.backgroundPosition;
+            dragged.style.backgroundPosition = e.target.style.backgroundPosition;
+            e.target.style.backgroundPosition = temp;
+        }
+    });
+}
+createPuzzle(); shuffle();
+
+// 2. كود الذاكرة
+const emojis = ['🐭', '🐱', '🐶', '🐰'];
+let cards = []; let flippedCards = []; let matchedPairs = 0;
+
+function startMemoryGame() {
+    const game = document.getElementById('memory-game');
+    game.innerHTML = ''; cards = [...emojis,...emojis].sort(() => Math.random() - 0.5);
+    flippedCards = []; matchedPairs = 0; document.getElementById('score').innerText = 0;
+    cards.forEach((emoji) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card'; card.dataset.emoji = emoji; card.innerHTML = '?';
+        card.onclick = () => flipCard(card); game.appendChild(card);
+    });
+}
+function flipCard(card) {
+    if (flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+    card.classList.add('flipped'); card.innerHTML = card.dataset.emoji; flippedCards.push(card);
+    if (flippedCards.length === 2) { setTimeout(checkMatch, 800); }
+}
+function checkMatch() {
+    const [card1, card2] = flippedCards;
+    if (card1.dataset.emoji === card2.dataset.emoji) {
+        card1.classList.add('matched'); card2.classList.add('matched'); matchedPairs++;
+        document.getElementById('score').innerText = matchedPairs;
+        if (matchedPairs === emojis.length) { setTimeout(() => alert('برافو! كسبت 🎉'), 500); }
+    } else {
+        card1.classList.remove('flipped'); card2.classList.remove('flipped');
+        card1.innerHTML = '?'; card2.innerHTML = '?';
+    }
+    flippedCards = [];
+}
+startMemoryGame();
+</script>
+
+</body>
+</html>
