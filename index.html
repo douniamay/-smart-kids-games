@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عالم الألعاب الذكية</title>
+<style>
+body {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);font-family: 'Arial', sans-serif;text-align: center;color: white;padding: 20px;margin: 0;}
+h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+.level-btn {background: #fff;color: #764ba2;border: none;padding: 10px 25px;font-size: 1.1em;font-weight: bold;border-radius: 20px;cursor: pointer;margin: 5px;}
+.start-btn,.restart-btn {background: #ffeb3b;color: #764ba2;border: none;padding: 15px 40px;font-size: 1.3em;font-weight: bold;border-radius: 30px;cursor: pointer;margin: 20px;}
+.game-board {display: none;grid-template-columns: repeat(4, 130px);gap: 20px;justify-content: center;margin: 30px auto;}
+.card {width: 130px;height: 130px;background: #fff;border-radius: 20px;display: flex;align-items: center;justify-content: center;font-size: 3.5em;cursor: pointer;box-shadow: 0 6px 12px rgba(0,0,0,0.2);}
+.card.flipped { background: #ffeb3b; }
+#info { font-size: 1.3em; font-weight: bold; display: none; }
+.restart-btn { display: none; }
+</style>
+</head>
+<body>
+<h1>🎈 عالم الألعاب الذكية 🎈</h1>
+<div id="levels"><p>اختاري المستوى:</p><button class="level-btn" onclick="setLevel(6)">سهل - 6 أزواج</button><button class="level-btn" onclick="setLevel(8)">صعب - 8 أزواج</button></div>
+<button class="start-btn" onclick="startGame()">ابدأ اللعبة</button>
+<div id="info"><p>النتيجة: <span id="score">0</span> | الوقت: <span id="time">0</span> ثانية</p></div>
+<div class="game-board" id="gameBoard"></div>
+<button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
+<script>
+let level = 6;let emojis = ['🍎','🍌','🍇','🍓','🍊','🍉','🥝','🍍'];let cards = [];const board = document.getElementById('gameBoard');let flippedCards = [];let score = 0;let canFlip = true;let timer = 0;let timerInterval;
+function setLevel(l) {level = l;document.querySelectorAll('.level-btn').forEach(b=>b.style.background='#fff');event.target.style.background='#ffeb3b';}
+function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0;canFlip = true;clearInterval(timerInterval);document.getElementById('info').style.display = 'block';document.getElementById('score').innerText = 0;document.getElementById('time').innerText = 0;document.querySelector('.start-btn').style.display = 'none';document.querySelector('#levels').style.display = 'none';document.querySelector('.restart-btn').style.display = 'none';board.style.display = 'grid';let gameEmojis = emojis.slice(0, level);cards = [...gameEmojis,...gameEmojis].sort(() => Math.random() - 0.5);cards.forEach((emoji) => {const card = document.createElement('div');card.classList.add('card');card.dataset.emoji = emoji;card.innerHTML = '?';card.onclick = () => flipCard(card);board.appendChild(card);});timerInterval = setInterval(()=> {timer++;document.getElementById('time').innerText = timer;}, 1000);}
+function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
+function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
+</script>
+</body>
+</html>
