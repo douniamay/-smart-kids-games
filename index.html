@@ -25,63 +25,51 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 <div class="game-board" id="gameBoard"></div>
 <button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
 <script>
-let level = 6;let emojis = ['🍎','🍌','🍇','🍓','🍊','🍉','🥝','🍍'];let cards = [];const board = document.getElementById('gameBoard');let flippedCards = [];let score = 0;let canFlip = true;let timer = 0;let timerInterval;
-function setLevel(l) {level = l;document.querySelectorAll('.level-btn').forEach(b=>b.style.background='#fff');event.target.style.background='#ffeb3b';}
-function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0;canFlip = true;clearInterval(timerInterval);document.getElementById('info').style.display = 'block';document.getElementById('score').innerText = 0;document.getElementById('time').innerText = 0;document.querySelector('.start-btn').style.display = 'none';document.querySelector('#levels').style.display = 'none';document.querySelector('.restart-btn').style.display = 'none';board.style.display = 'grid';let gameEmojis = emojis.slice(0, level);cards = [...gameEmojis,...gameEmojis].sort(() => Math.random() - 0.5);cards.forEach((emoji) => {const card = document.createElement('div');card.classList.add('card');card.dataset.emoji = emoji;card.innerHTML = '?';card.onclick = () => flipCard(card);board.appendChild(card);});timerInterval = setInterval(()=> {timer++;document.getElementById('time').innerText = timer;}, 1000);}
-function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
-function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
-</script>
+    let selected3 = [];
+    const mix3 = {
+      "red,orange": "red-orange", "orange,red": "red-orange",
+      "red,purple": "red-purple", "purple,red": "red-purple",
+      "yellow,orange": "yellow-orange", "orange,yellow": "yellow-orange",
+      "yellow,green": "yellow-green", "green,yellow": "yellow-green",
+      "blue,green": "blue-green", "green,blue": "blue-green",
+      "blue,purple": "blue-purple", "purple,blue": "blue-purple"
+    };
 
+    const colorCode = {
+      "red-orange": "#FF4500", "red-purple": "#C71585",
+      "yellow-orange": "#FFA500", "yellow-green": "#ADFF2F",
+      "blue-green": "#00CED1", "blue-purple": "#8A2BE2"
+    };
 
-<!-- لعبة دمج الالوان -->
-<div class="game-container">
-  <h2>🎨 لعبة دمج الالوان</h2>
-  <p>دوسي على لونين عشان ندمجهم</p>
+    document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=>{
+      btn.onclick = () => {
+        if(selected3.length < 2){
+          selected3.push(btn.dataset.color);
+          btn.style.border = "4px solid black";
+          btn.style.opacity = "0.7";
+        }
+        if(selected3.length === 2){
+          let key = selected3.join(',');
+          let colorName = mix3[key] || "غير متاح";
+          let colorValue = colorCode[colorName] || "#ccc";
+          document.getElementById('result-box3').style.background = colorValue;
+          document.getElementById('result-box3').innerText = colorName;
+          document.getElementById('result-box3').style.color = "#fff";
+        }
+      }
+    });
 
-  <div id="colors">
-    <button class="color-btn" style="background:red" data-color="red"></button>
-    <button class="color-btn" style="background:yellow" data-color="yellow"></button>
-    <button class="color-btn" style="background:blue" data-color="blue"></button>
-  </div>
-
-  <div id="result-box">النتيجة هنا</div>
-  <button onclick="resetColors()">امسح</button>
-</div>
-
-<script>
-let selected = [];
-
-const mix = {
-  "red,yellow": "orange",
-  "yellow,red": "orange",
-  "blue,yellow": "green",
-  "yellow,blue": "green",
-  "red,blue": "purple",
-  "blue,red": "purple"
-};
-
-document.querySelectorAll('.color-btn').forEach(btn=>{
-  btn.onclick = () => {
-    if(selected.length < 2){
-      selected.push(btn.dataset.color);
-      btn.style.border = "4px solid black";
+    function resetColors3(){
+      selected3 = [];
+      document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> {
+        btn.style.border = "3px solid #ddd";
+        btn.style.opacity = "1";
+      });
+      document.getElementById('result-box3').style.background = "#ffffff";
+      document.getElementById('result-box3').innerText = "النتيجة هنا";
+      document.getElementById('result-box3').style.color = "#333";
     }
-    if(selected.length === 2){
-      let key = selected.join(',');
-      let newColor = mix[key] || "gray";
-      document.getElementById('result-box').style.background = newColor;
-      document.getElementById('result-box').innerText = "واااو طلع " + newColor;
-    }
-  }
-});
-
-function resetColors(){
-  selected = [];
-  document.querySelectorAll('.color-btn').forEach(btn=> btn.style.border = "none");
-  document.getElementById('result-box').style.background = "#eee";
-  document.getElementById('result-box').innerText = "النتيجة هنا";
-}
-</script>
+    </script>
 
 <style>
 .color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:none}
@@ -153,7 +141,6 @@ function resetColors3(){
   document.getElementById('result-box3').innerText = "النتيجة هنا";
 }
 </script>
-```html
 <style>
 .color-btn{width:80px; height:80px; border-radius:50%; margin:8px; cursor:pointer; border:3px solid #ddd}
 #result-box3{
