@@ -88,6 +88,80 @@ function resetColors(){
 .color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:none}
 #result-box{width:150px; height:150px; margin:20px auto; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:15px; font-weight:bold}
 </style>
+<!-- لعبة الالوان الثلاثية -->
+<div class="game-container">
+  <h2>🎨 لعبة الالوان الثلاثية</h2>
+  <p>اختاري لون اساسي + لون ثانوي</p>
+
+  <h4>الالوان الاساسية</h4>
+  <div id="primary-colors">
+    <button class="color-btn" style="background:red" data-color="red" title="احمر"></button>
+    <button class="color-btn" style="background:yellow" data-color="yellow" title="اصفر"></button>
+    <button class="color-btn" style="background:blue" data-color="blue" title="ازرق"></button>
+  </div>
+
+  <h4>الالوان الثانوية</h4>
+  <div id="secondary-colors">
+    <button class="color-btn" style="background:orange" data-color="orange" title="برتقالي"></button>
+    <button class="color-btn" style="background:green" data-color="green" title="اخضر"></button>
+    <button class="color-btn" style="background:purple" data-color="purple" title="بنفسجي"></button>
+  </div>
+
+  <div id="result-box3">النتيجة هنا</div>
+  <button onclick="resetColors3()">امسح</button>
+</div>
+
+<script>
+let selected3 = [];
+
+const mix3 = {
+  "red,orange": "red-orange",
+  "orange,red": "red-orange",
+  "red,purple": "red-purple",
+  "purple,red": "red-purple",
+  "yellow,orange": "yellow-orange",
+  "orange,yellow": "yellow-orange",
+  "yellow,green": "yellow-green",
+  "green,yellow": "yellow-green",
+  "blue,green": "blue-green",
+  "green,blue": "blue-green",
+  "blue,purple": "blue-purple",
+  "purple,blue": "blue-purple"
+};
+
+const colorCode = {
+  "red-orange": "#FF4500",
+  "red-purple": "#C71585",
+  "yellow-orange": "#FFA500",
+  "yellow-green": "#ADFF2F",
+  "blue-green": "#00CED1",
+  "blue-purple": "#8A2BE2"
+};
+
+document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=>{
+  btn.onclick = () => {
+    if(selected3.length < 2){
+      selected3.push(btn.dataset.color);
+      btn.style.border = "4px solid black";
+    }
+    if(selected3.length === 2){
+      let key = selected3.join(',');
+      let colorName = mix3[key] || "غير متاح";
+      let colorValue = colorCode[colorName] || "#ccc";
+
+      document.getElementById('result-box3').style.background = colorValue;
+      document.getElementById('result-box3').innerText = colorName;
+    }
+  }
+});
+
+function resetColors3(){
+  selected3 = [];
+  document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> btn.style.border = "none");
+  document.getElementById('result-box3').style.background = "#eee";
+  document.getElementById('result-box3').innerText = "النتيجة هنا";
+}
+</script>
 
 </body>
 </html>
