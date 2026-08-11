@@ -111,32 +111,20 @@ function resetColors(){
   <div id="result-box3">النتيجة هنا</div>
   <button onclick="resetColors3()">امسح</button>
 </div>
-
 <script>
 let selected3 = [];
-
 const mix3 = {
-  "red,orange": "red-orange",
-  "orange,red": "red-orange",
-  "red,purple": "red-purple",
-  "purple,red": "red-purple",
-  "yellow,orange": "yellow-orange",
-  "orange,yellow": "yellow-orange",
-  "yellow,green": "yellow-green",
-  "green,yellow": "yellow-green",
-  "blue,green": "blue-green",
-  "green,blue": "blue-green",
-  "blue,purple": "blue-purple",
-  "purple,blue": "blue-purple"
+  "red,orange": "red-orange", "orange,red": "red-orange",
+  "red,purple": "red-purple", "purple,red": "red-purple",
+  "yellow,orange": "yellow-orange", "orange,yellow": "yellow-orange",
+  "yellow,green": "yellow-green", "green,yellow": "yellow-green",
+  "blue,green": "blue-green", "green,blue": "blue-green",
+  "blue,purple": "blue-purple", "purple,blue": "blue-purple"
 };
-
 const colorCode = {
-  "red-orange": "#FF4500",
-  "red-purple": "#C71585",
-  "yellow-orange": "#FFA500",
-  "yellow-green": "#ADFF2F",
-  "blue-green": "#00CED1",
-  "blue-purple": "#8A2BE2"
+  "red-orange": "#FF4500", "red-purple": "#C71585",
+  "yellow-orange": "#FFA500", "yellow-green": "#ADFF2F",
+  "blue-green": "#00CED1", "blue-purple": "#8A2BE2"
 };
 
 document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=>{
@@ -144,43 +132,43 @@ document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-bt
     if(selected3.length < 2){
       selected3.push(btn.dataset.color);
       btn.style.border = "4px solid black";
+      btn.style.opacity = "0.7";
     }
     if(selected3.length === 2){
       let key = selected3.join(',');
       let colorName = mix3[key] || "غير متاح";
       let colorValue = colorCode[colorName] || "#ccc";
-
       document.getElementById('result-box3').style.background = colorValue;
       document.getElementById('result-box3').innerText = colorName;
     }
   }
 });
-
 function resetColors3(){
   selected3 = [];
-  document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> btn.style.border = "none");
-  document.getElementById('result-box3').style.background = "#eee";
+  document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> {
+    btn.style.border = "none";
+    btn.style.opacity = "1";
+  });
+  document.getElementById('result-box3').style.background = "#ffffff";
   document.getElementById('result-box3').innerText = "النتيجة هنا";
 }
 </script>
+```html
 <style>
 .color-btn{width:80px; height:80px; border-radius:50%; margin:8px; cursor:pointer; border:3px solid #ddd}
 #result-box3{
-  width:200px; 
-  height:200px; 
-  margin:20px auto; 
-  background:#eee; 
-  display:flex; 
-  align-items:center; 
-  justify-content:center; 
-  border-radius:20px; 
-  font-weight:bold; 
-  font-size:18px;
-  border:4px dashed #999;
+  width:180px;
+  height:180px;
+  margin:20px auto;
+  background:#ffffff;
+  border-radius:20px;
+  font-weight:bold;
+  font-size:20px;
+  border:4px dashed #ffcc00;
   text-align:center;
+  line-height:180px;
   color:#333;
 }
 </style>
-
 </body>
 </html>
