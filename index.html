@@ -32,6 +32,8 @@ function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classL
 function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
 </script>
 
+
+  
 <!-- لعبة دمج الالوان -->
 <div class="game-container">
   <h2>🎨 لعبة دمج الالوان</h2>
@@ -86,6 +88,6 @@ function resetColors(){
 .color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:none}
 #result-box{width:150px; height:150px; margin:20px auto; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:15px; font-weight:bold}
 </style>
-تم
+
 </body>
 </html>
