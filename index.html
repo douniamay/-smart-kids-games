@@ -26,7 +26,6 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 </style>
 
 <h1>🎈 عالم الألعاب الذكية 🎈</h1>
-
 <div id="levels"><p>اختاري المستوى:</p>
 <button class="level-btn" onclick="setLevel(6)">سهل - 6 أزواج</button>
 <button class="level-btn" onclick="setLevel(8)">صعب - 8 أزواج</button>
@@ -35,7 +34,6 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 <div id="info"><p>النتيجة: <span id="score">0</span> | الوقت: <span id="time">0</span> ثانية</p></div>
 <div class="game-board" id="gameBoard"></div>
 <button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
-
 <script>
 let level = 6;let emojis = ['🍎','🍌','🍇','🍓','🍊','🍉','🥝','🍍'];let cards = [];const board = document.getElementById('gameBoard');let flippedCards = [];let score = 0;let canFlip = true;let timer = 0;let timerInterval;
 function setLevel(l) {level = l;document.querySelectorAll('.level-btn').forEach(b=>b.style.background='#fff');event.target.style.background='#ffeb3b';}
@@ -43,16 +41,12 @@ function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0
 function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
 function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
 </script>
-  
-
-<script>
 const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
 let levelBoard = document.getElementById('level-board');
 let levelStatus = document.getElementById('level-status');
 let levelCards = [];
 let levelFlipped = [];
 let levelCanFlip = false;
-
 function startLevel(pairs){
   levelBoard.innerHTML = '';
   levelCards = [];
@@ -62,11 +56,9 @@ function startLevel(pairs){
   // نحدد عدد الاعمدة حسب عدد الازواج
   let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
   levelBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
-  
   // نختار الفواكه حسب المرحلة ونكررها
   let selected = allFruits.slice(0, pairs);
   let items = [...selected, ...selected].sort(()=>Math.random()-0.5);
-  
   items.forEach((item)=>{
     let card = document.createElement('div');
     card.className = 'card';
@@ -76,7 +68,6 @@ function startLevel(pairs){
     levelBoard.appendChild(card);
     levelCards.push(card);
   });
-
   levelStatus.innerText = 'احفظي اماكن الفواكه...';
   // بعد 3 ثواني نقلب
   setTimeout(()=>{
@@ -85,7 +76,6 @@ function startLevel(pairs){
     levelCanFlip = true;
   }, 3000);
 }
-
 function flipLevelCard(){
   if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
   
@@ -187,7 +177,6 @@ function resetColors(){
 </script>
   <hr style="margin:50px 0; border:2px dashed #ffcc00;">
 <h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
-
 <div id="memory-levels-game" style="text-align:center;">
   <button onclick="startLevel(6)">المستوى 1: 6 ازواج</button>
   <button onclick="startLevel(8)">المستوى 2: 8 ازواج</button>
@@ -195,7 +184,6 @@ function resetColors(){
   <div id="level-board" class="board"></div>
   <p id="level-status" style="font-size:20px; font-weight:bold;"></p>
 </div>
-
 <style>
 #memory-levels-game button{padding:10px 20px; margin:5px; font-size:16px; background:#ffcc00; border:none; border-radius:10px; cursor:pointer;}
 #memory-levels-game .board{display:grid; gap:10px; justify-content:center; margin:20px auto;}
