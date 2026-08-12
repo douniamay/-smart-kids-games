@@ -15,7 +15,6 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 .card.flipped { background: #ffeb3b; }
 #info { font-size: 1.3em; font-weight: bold; display: none; }
 .restart-btn { display: none; }
-
 .color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:3px solid #ddd; transition:0.2s}
 .color-btn:hover{transform:scale(1.1)}
 #result-box3{
@@ -45,9 +44,10 @@ function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0
 function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
 function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
 </script>
+  
   <title>لعبة الالوان الثانوية</title>
 <style>
-  body {
+  </body> {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     font-family: 'Arial', sans-serif;
     text-align: center;
@@ -73,7 +73,6 @@ function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dat
   }
   button.reset:hover{transform:scale(1.05)}
 </style>
-</head>
 <body>
 
 <h1>🎨 لعبة خلط الالوان 🎨</h1>
@@ -132,7 +131,6 @@ document.querySelectorAll('.color-btn').forEach(btn=>{
     }
   }
 });
-
 function resetColors(){
   selected = [];
   document.querySelectorAll('.color-btn').forEach(btn=> {
@@ -145,4 +143,4 @@ function resetColors(){
 }
 </script>
 </body>
-</html>
+  </html>
