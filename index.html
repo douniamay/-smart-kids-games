@@ -108,82 +108,6 @@ function checkLevelMatch(){
   levelCanFlip = true;
 }
 </script>
-   
-<hr style="margin:50px 0; border:2px dashed #ffcc00;">
-<h2 style="text-align:center;">🍓 لعبة الذاكرة بالمعاينة 🍓</h2>
-
-<div id="memory-preview-game">
-  <div id="preview-board" class="board"></div>
-  <p id="preview-status" style="text-align:center; font-size:20px; font-weight:bold;">جاري المعاينة...</p>
-</div>
-
-<style>
-#memory-preview-game .board{display:grid; grid-template-columns:repeat(4, 100px); gap:10px; justify-content:center; margin:20px auto;}
-#memory-preview-game .card{width:100px; height:100px; background:#fff; border:3px solid #ffcc00; border-radius:15px; font-size:50px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.3s;}
-#memory-preview-game .card.flipped{background:#ffeeba;}
-#memory-preview-game .card.matched{background:#90ee90; cursor:default;}
-</style>
-
-<script>
-const previewItems = ['🍓','🍎','🍌','🍇','🍓','🍎','🍌','🍇']; // 4 ازواج
-let previewBoard = document.getElementById('preview-board');
-let previewStatus = document.getElementById('preview-status');
-let previewCards = [];
-let previewFlipped = [];
-let previewCanFlip = false;
-
-function initPreviewGame(){
-  previewBoard.innerHTML = '';
-  let shuffled = previewItems.sort(()=>Math.random()-0.5);
-  
-  shuffled.forEach((item, i)=>{
-    let card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.item = item;
-    card.innerText = item; // نورّيها في الاول
-    card.onclick = flipPreviewCard;
-    previewBoard.appendChild(card);
-    previewCards.push(card);
-  });
-
-  // بعد 3 ثواني نقلبهم كلهم
-  setTimeout(()=>{
-    previewCards.forEach(c=> c.innerText = '?');
-    previewStatus.innerText = 'يلا ابدئي ابحثي عن المتشابهات';
-    previewCanFlip = true;
-  }, 3000);
-}
-
-function flipPreviewCard(){
-  if(!previewCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
-  
-  this.innerText = this.dataset.item;
-  this.classList.add('flipped');
-  previewFlipped.push(this);
-
-  if(previewFlipped.length === 2){
-    previewCanFlip = false;
-    setTimeout(checkPreviewMatch, 500);
-  }
-}
-
-function checkPreviewMatch(){
-  let [c1, c2] = previewFlipped;
-  if(c1.dataset.item === c2.dataset.item){
-    c1.classList.add('matched');
-    c2.classList.add('matched');
-  } else {
-    c1.innerText = '?';
-    c2.innerText = '?';
-    c1.classList.remove('flipped');
-    c2.classList.remove('flipped');
-  }
-  previewFlipped = [];
-  previewCanFlip = true;
-}
-
-initPreviewGame();
-</script>
 <hr style="margin:50px 0; border:2px dashed #ffcc00;">
 <h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
 
@@ -243,7 +167,6 @@ function startLevel(pairs){
     levelCanFlip = true;
   }, 3000);
 }
-
 function flipLevelCard(){
   if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
   
@@ -276,7 +199,6 @@ function checkLevelMatch(){
   levelCanFlip = true;
 }
 </script>
-
  
 <h1>🎨 لعبة خلط الالوان 🎨</h1>
 <p>اختاري لونين مع بعض و شوفي النتيجة</p>
