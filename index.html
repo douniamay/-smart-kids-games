@@ -70,13 +70,11 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
       document.getElementById('result-box3').style.color = "#333";
     }
     </script>
-
 <style>
 .color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:none}
 #result-box{width:150px; height:150px; margin:20px auto; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:15px; font-weight:bold}
 </style>
-
-
+    
 <!-- لعبة الالوان الثلاثية -->
 <div class="game-container">
   <h2>🎨 لعبة الالوان الثلاثية</h2>
@@ -99,48 +97,53 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
   <div id="result-box3">النتيجة هنا</div>
   <button onclick="resetColors3()">امسح</button>
 </div>
-<script>
-let selected3 = [];
-const mix3 = {
-  "red,orange": "red-orange", "orange,red": "red-orange",
-  "red,purple": "red-purple", "purple,red": "red-purple",
-  "yellow,orange": "yellow-orange", "orange,yellow": "yellow-orange",
-  "yellow,green": "yellow-green", "green,yellow": "yellow-green",
-  "blue,green": "blue-green", "green,blue": "blue-green",
-  "blue,purple": "blue-purple", "purple,blue": "blue-purple"
-};
-const colorCode = {
-  "red-orange": "#FF4500", "red-purple": "#C71585",
-  "yellow-orange": "#FFA500", "yellow-green": "#ADFF2F",
-  "blue-green": "#00CED1", "blue-purple": "#8A2BE2"
-};
+HTML
+‏<script>‏
+let selected3‎‏ = [];‏
+const mix3‎‏ = {‏
+‏  "‏red,orange": "red-orange", "orange,red": "red-orange‏",‏
+‏  "‏red,purple": "red-purple", "purple,red": "red-purple‏",‏
+‏  "‏yellow,orange": "yellow-orange", "orange,yellow": "yellow-orange‏",‏
+‏  "‏yellow,green": "yellow-green", "green,yellow": "yellow-green‏",‏
+‏  "‏blue,green": "blue-green", "green,blue": "blue-green‏",‏
+‏  "‏blue,purple": "blue-purple", "purple,blue": "blue-purple‏"‏
+‏};‏
 
-document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=>{
-  btn.onclick = () => {
-    if(selected3.length < 2){
-      selected3.push(btn.dataset.color);
-      btn.style.border = "4px solid black";
-      btn.style.opacity = "0.7";
-    }
-    if(selected3.length === 2){
-      let key = selected3.join(',');
-      let colorName = mix3[key] || "غير متاح";
-      let colorValue = colorCode[colorName] || "#ccc";
-      document.getElementById('result-box3').style.background = colorValue;
-      document.getElementById('result-box3').innerText = colorName;
-    }
-  }
-});
-function resetColors3(){
-  selected3 = [];
-  document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> {
-    btn.style.border = "none";
-    btn.style.opacity = "1";
-  });
-  document.getElementById('result-box3').style.background = "#ffffff";
-  document.getElementById('result-box3').innerText = "النتيجة هنا";
-}
-</script>
+const colorCode‏ = {‏
+‏  "‏red-orange": "#FF4500", "red-purple": "#C71585‎‏",‏
+‏  "‏yellow-orange": "#FFA500", "yellow-green": "#ADFF2F‏",‏
+‏  "‏blue-green": "#00CED1", "blue-purple": "#8A2BE2‎‏"‏
+‏};‏
+
+‏// صلحنا المسافة هنا مهمة جدا
+document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-‎btn').forEach(btn‏=>{‏
+‏  ‏btn.onclick‏ = () => {‏
+‏    ‏if(selected3.length < 2‎‏){‏
+‏      ‏selected3.push(btn.dataset.color‏);‏
+‏      ‏btn.style.border = "4px solid #000‎‏";‏
+‏    }‏
+‏    ‏if(selected3.length === 2‎‏){‏
+‏      ‏let key = selected3.join‏(',');‏
+‏      ‏let colorName = mix3[key‏] || "غير متاح";‏
+‏      ‏let colorValue = colorCode[colorName] || "#ccc‏";‏
+
+‏      ‏document.getElementById('result-box3').style.background = colorValue‏;‏
+‏      ‏document.getElementById('result-box3').innerText = colorName‏;‏
+‏      ‏document.getElementById('result-box3').style.color = "#fff‏";‏
+‏    }‏
+‏  }‏
+‏});‏
+
+function resetColors3‎‏(){‏
+‏  ‏selected3‎‏ = [];‏
+‏  ‏document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-‎btn').forEach(btn‏=> {‏
+‏    ‏btn.style.border = "3px solid #ddd‏";‏
+‏  });‏
+‏  ‏document.getElementById('result-box3').style.background = "#ffffff‏";‏
+‏  ‏document.getElementById('result-box3').innerText‏ = "النتيجة هنا";‏
+‏  ‏document.getElementById('result-box3').style.color = "#333‎‏";‏
+‏}‏
+‏</‏script‏>‏
 <style>
 .color-btn{width:80px; height:80px; border-radius:50%; margin:8px; cursor:pointer; border:3px solid #ddd}
 #result-box3{
