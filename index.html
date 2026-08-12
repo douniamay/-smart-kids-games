@@ -141,5 +141,98 @@ function resetColors(){
   document.getElementById('result-box3').style.color = "#333";
 }
 </script>
+  <hr style="margin:50px 0; border:2px dashed #ffcc00;">
+<h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
+
+<div id="memory-levels-game" style="text-align:center;">
+  <button onclick="startLevel(6)">المستوى 1: 6 ازواج</button>
+  <button onclick="startLevel(8)">المستوى 2: 8 ازواج</button>
+  <button onclick="startLevel(10)">المستوى 3: 10 ازواج</button>
+  <div id="level-board" class="board"></div>
+  <p id="level-status" style="font-size:20px; font-weight:bold;"></p>
+</div>
+
+<style>
+#memory-levels-game button{padding:10px 20px; margin:5px; font-size:16px; background:#ffcc00; border:none; border-radius:10px; cursor:pointer;}
+#memory-levels-game .board{display:grid; gap:10px; justify-content:center; margin:20px auto;}
+#memory-levels-game .card{width:80px; height:80px; background:#fff; border:3px solid #ffcc00; border-radius:15px; font-size:40px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
+#memory-levels-game .card.flipped{background:#ffeeba;}
+#memory-levels-game .card.matched{background:#90ee90; cursor:default;}
+</style>
+
+<script>
+const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
+let levelBoard = document.getElementById('level-board');
+let levelStatus = document.getElementById('level-status');
+let levelCards = [];
+let levelFlipped = [];
+let levelCanFlip = false;
+
+function startLevel(pairs){
+  levelBoard.innerHTML = '';
+  levelCards = [];
+  levelFlipped = [];
+  levelCanFlip = false;
+  
+  // نحدد عدد الاعمدة حسب عدد الازواج
+  let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
+  levelBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+  
+  // نختار الفواكه حسب المرحلة ونكررها
+  let selected = allFruits.slice(0, pairs);
+  let items = [...selected, ...selected].sort(()=>Math.random()-0.5);
+  
+  items.forEach((item)=>{
+    let card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.item = item;
+    card.innerText = item; // معاينة
+    card.onclick = flipLevelCard;
+    levelBoard.appendChild(card);
+    levelCards.push(card);
+  });
+
+  levelStatus.innerText = 'احفظي اماكن الفواكه...';
+  // بعد 3 ثواني نقلب
+  setTimeout(()=>{
+    levelCards.forEach(c=> c.innerText = '?');
+    levelStatus.innerText = 'يلا ابدئي';
+    levelCanFlip = true;
+  }, 3000);
+}
+
+function flipLevelCard(){
+  if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+  
+  this.innerText = this.dataset.item;
+  this.classList.add('flipped');
+  levelFlipped.push(this);
+
+  if(levelFlipped.length === 2){
+    levelCanFlip = false;
+    setTimeout(checkLevelMatch, 600);
+  }
+}
+
+function checkLevelMatch(){
+  let [c1, c2] = levelFlipped;
+  if(c1.dataset.item === c2.dataset.item){
+    c1.classList.add('matched');
+    c2.classList.add('matched');
+    // فوز
+    if(document.querySelectorAll('#memory-levels-game .matched').length === levelCards.length){
+      levelStatus.innerText = '🎉 برافووو خلصتي المرحلة 🎉';
+    }
+  } else {
+    c1.innerText = '?';
+    c2.innerText = '?';
+    c1.classList.remove('flipped');
+    c2.classList.remove('flipped');
+  }
+  levelFlipped = [];
+  levelCanFlip = true;
+}
+</script>
+
 </body>
   </html>
