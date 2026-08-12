@@ -44,36 +44,80 @@ function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classL
 function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
 </script>
   
-  <title>لعبة الالوان الثانوية</title>
-<style>
-  </body> {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    color: white;
-    padding: 30px;
-  }
-  h1 { font-size: 2.2em; margin-bottom: 10px; }
-  p { font-size: 1.2em; }
- .color-btn{
-    width:100px; height:100px; border-radius:50%; margin:15px;
-    cursor:pointer; border:4px solid #ddd; transition:0.3s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
- .color-btn:hover{transform:scale(1.1); border-color: white;}
-  #result-box3{
-    width:220px; height:220px; margin:30px auto; background:#ffffff;
-    border-radius:25px; font-weight:bold; font-size:24px; border:5px dashed #ffeb3b;
-    display:flex; align-items:center; justify-content:center; color:#333;
-  }
-  button.reset{
-    background:#ffeb3b; color:#764ba2; border:none; padding:12px 35px;
-    font-size:1.2em; font-weight:bold; border-radius:25px; cursor:pointer;
-  }
-  button.reset:hover{transform:scale(1.05)}
-</style>
-<body>
 
+<script>
+const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
+let levelBoard = document.getElementById('level-board');
+let levelStatus = document.getElementById('level-status');
+let levelCards = [];
+let levelFlipped = [];
+let levelCanFlip = false;
+
+function startLevel(pairs){
+  levelBoard.innerHTML = '';
+  levelCards = [];
+  levelFlipped = [];
+  levelCanFlip = false;
+  
+  // نحدد عدد الاعمدة حسب عدد الازواج
+  let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
+  levelBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+  
+  // نختار الفواكه حسب المرحلة ونكررها
+  let selected = allFruits.slice(0, pairs);
+  let items = [...selected, ...selected].sort(()=>Math.random()-0.5);
+  
+  items.forEach((item)=>{
+    let card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.item = item;
+    card.innerText = item; // معاينة
+    card.onclick = flipLevelCard;
+    levelBoard.appendChild(card);
+    levelCards.push(card);
+  });
+
+  levelStatus.innerText = 'احفظي اماكن الفواكه...';
+  // بعد 3 ثواني نقلب
+  setTimeout(()=>{
+    levelCards.forEach(c=> c.innerText = '?');
+    levelStatus.innerText = 'يلا ابدئي';
+    levelCanFlip = true;
+  }, 3000);
+}
+
+function flipLevelCard(){
+  if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+  
+  this.innerText = this.dataset.item;
+  this.classList.add('flipped');
+  levelFlipped.push(this);
+
+  if(levelFlipped.length === 2){
+    levelCanFlip = false;
+    setTimeout(checkLevelMatch, 600);
+  }
+}
+
+function checkLevelMatch(){
+  let [c1, c2] = levelFlipped;
+  if(c1.dataset.item === c2.dataset.item){
+    c1.classList.add('matched');
+    c2.classList.add('matched');
+    // فوز
+    if(document.querySelectorAll('#memory-levels-game .matched').length === levelCards.length){
+      levelStatus.innerText = '🎉 برافووو خلصتي المرحلة 🎉';
+    }
+  } else {
+    c1.innerText = '?';
+    c2.innerText = '?';
+    c1.classList.remove('flipped');
+    c2.classList.remove('flipped');
+  }
+  levelFlipped = [];
+  levelCanFlip = true;
+}
+</script>
 <h1>🎨 لعبة خلط الالوان 🎨</h1>
 <p>اختاري لونين مع بعض و شوفي النتيجة</p>
 
@@ -159,80 +203,5 @@ function resetColors(){
 #memory-levels-game .card.flipped{background:#ffeeba;}
 #memory-levels-game .card.matched{background:#90ee90; cursor:default;}
 </style>
-
-<script>
-const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
-let levelBoard = document.getElementById('level-board');
-let levelStatus = document.getElementById('level-status');
-let levelCards = [];
-let levelFlipped = [];
-let levelCanFlip = false;
-
-function startLevel(pairs){
-  levelBoard.innerHTML = '';
-  levelCards = [];
-  levelFlipped = [];
-  levelCanFlip = false;
-  
-  // نحدد عدد الاعمدة حسب عدد الازواج
-  let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
-  levelBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
-  
-  // نختار الفواكه حسب المرحلة ونكررها
-  let selected = allFruits.slice(0, pairs);
-  let items = [...selected, ...selected].sort(()=>Math.random()-0.5);
-  
-  items.forEach((item)=>{
-    let card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.item = item;
-    card.innerText = item; // معاينة
-    card.onclick = flipLevelCard;
-    levelBoard.appendChild(card);
-    levelCards.push(card);
-  });
-
-  levelStatus.innerText = 'احفظي اماكن الفواكه...';
-  // بعد 3 ثواني نقلب
-  setTimeout(()=>{
-    levelCards.forEach(c=> c.innerText = '?');
-    levelStatus.innerText = 'يلا ابدئي';
-    levelCanFlip = true;
-  }, 3000);
-}
-
-function flipLevelCard(){
-  if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
-  
-  this.innerText = this.dataset.item;
-  this.classList.add('flipped');
-  levelFlipped.push(this);
-
-  if(levelFlipped.length === 2){
-    levelCanFlip = false;
-    setTimeout(checkLevelMatch, 600);
-  }
-}
-
-function checkLevelMatch(){
-  let [c1, c2] = levelFlipped;
-  if(c1.dataset.item === c2.dataset.item){
-    c1.classList.add('matched');
-    c2.classList.add('matched');
-    // فوز
-    if(document.querySelectorAll('#memory-levels-game .matched').length === levelCards.length){
-      levelStatus.innerText = '🎉 برافووو خلصتي المرحلة 🎉';
-    }
-  } else {
-    c1.innerText = '?';
-    c2.innerText = '?';
-    c1.classList.remove('flipped');
-    c2.classList.remove('flipped');
-  }
-  levelFlipped = [];
-  levelCanFlip = true;
-}
-</script>
-
 </body>
   </html>
