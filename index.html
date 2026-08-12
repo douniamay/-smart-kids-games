@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,204 +5,384 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>عالم الألعاب الذكية</title>
 <style>
-body {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);font-family: 'Arial', sans-serif;text-align: center;color: white;padding: 20px;margin: 0;}
-h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-.level-btn {background: #fff;color: #764ba2;border: none;padding: 10px 25px;font-size: 1.1em;font-weight: bold;border-radius: 20px;cursor: pointer;margin: 5px;}
-.start-btn,.restart-btn {background: #ffeb3b;color: #764ba2;border: none;padding: 15px 40px;font-size: 1.3em;font-weight: bold;border-radius: 30px;cursor: pointer;margin: 20px;}
-.game-board {display: none;grid-template-columns: repeat(4, 130px);gap: 20px;justify-content: center;margin: 30px auto;}
-.card {width: 130px;height: 130px;background: #fff;border-radius: 20px;display: flex;align-items: center;justify-content: center;font-size: 3.5em;cursor: pointer;box-shadow: 0 6px 12px rgba(0,0,0,0.2);}
-.card.flipped { background: #ffeb3b; }
-#info { font-size: 1.3em; font-weight: bold; display: none; }
-.restart-btn { display: none; }
-.color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:3px solid #ddd; transition:0.2s}
-.color-btn:hover{transform:scale(1.1)}
-#result-box3{
-  width:180px; height:180px; margin:20px auto; background:#ffffff;
-  border-radius:20px; font-weight:bold; font-size:20px; border:4px dashed #ffcc00;
-  display:flex; align-items:center; justify-content:center; color:#333;
-}
-.game-container{margin:40px 0;}
-</style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<h1>🎈 عالم الألعاب الذكية 🎈</h1>
-<div id="levels"><p>اختاري المستوى:</p>
-<button class="level-btn" onclick="setLevel(6)">سهل - 6 أزواج</button>
-<button class="level-btn" onclick="setLevel(8)">صعب - 8 أزواج</button>
-</div>
-<button class="start-btn" onclick="startGame()">ابدأ اللعبة</button>
-<div id="info"><p>النتيجة: <span id="score">0</span> | الوقت: <span id="time">0</span> ثانية</p></div>
-<div class="game-board" id="gameBoard"></div>
-<button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
-() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
-</script>
-  
-<h1>🎨 لعبة خلط الالوان 🎨</h1>
-<p>اختاري لونين مع بعض و شوفي النتيجة</p>
-
-<div id="colors">
-  <button class="color-btn" style="background:red" data-color="red"></button>
-  <button class="color-btn" style="background:yellow" data-color="yellow"></button>
-  <button class="color-btn" style="background:blue" data-color="blue"></button>
-  <br>
-  <button class="color-btn" style="background:orange" data-color="orange"></button>
-  <button class="color-btn" style="background:green" data-color="green"></button>
-  <button class="color-btn" style="background:purple" data-color="purple"></button>
-</div>
-
-<div id="result-box3">النتيجة هنا</div>
-<button class="reset" onclick="resetColors()">امسح و ابدأ من جديد</button>
-
-<script>
-let selected = [];
-
-const mix = {
-  "red,yellow": "برتقالي", "yellow,red": "برتقالي",
-  "red,blue": "بنفسجي", "blue,red": "بنفسجي",
-  "yellow,blue": "اخضر", "blue,yellow": "اخضر",
-  "red,orange": "برتقالي محمر", "orange,red": "برتقالي محمر",
-  "yellow,orange": "برتقالي مصفر", "orange,yellow": "برتقالي مصفر",
-  "yellow,green": "اخضر مصفر", "green,yellow": "اخضر مصفر",
-  "blue,green": "تركواز", "green,blue": "تركواز",
-  "blue,purple": "بنفسجي مزرق", "purple,blue": "بنفسجي مزرق",
-  "red,purple": "بنفسجي محمر", "purple,red": "بنفسجي محمر"
-};
-
-const colorCode = {
-  "برتقالي": "#FFA500", "بنفسجي": "#8A2BE2", "اخضر": "#32CD32",
-  "برتقالي محمر": "#FF4500", "برتقالي مصفر": "#FFD700",
-  "اخضر مصفر": "#ADFF2F", "تركواز": "#00CED1",
-  "بنفسجي مزرق": "#4B0082", "بنفسجي محمر": "#C71585"
-};
-
-document.querySelectorAll('.color-btn').forEach(btn=>{
-  btn.onclick = function() {
-    if(selected.length < 2){
-      selected.push(this.dataset.color);
-      this.style.border = "5px solid white";
-      this.style.boxShadow = "0 0 20px white";
-    }
-    if(selected.length === 2){
-      let key = selected.join(',');
-      let colorName = mix[key] || "مفيش خلط للونين دول";
-      let colorValue = colorCode[colorName] || "#ccc";
-
-      document.getElementById('result-box3').style.background = colorValue;
-      document.getElementById('result-box3').innerText = colorName;
-      document.getElementById('result-box3').style.color = "white";
-    }
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
   }
-});
-function resetColors(){
-  selected = [];
-  document.querySelectorAll('.color-btn').forEach(btn=> {
-    btn.style.border = "4px solid #ddd";
-    btn.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
-  });
-  document.getElementById('result-box3').style.background = "#ffffff";
-  document.getElementById('result-box3').innerText = "النتيجة هنا";
-  document.getElementById('result-box3').style.color = "#333";
-}
-</script>
-  <hr style="margin:50px 0; border:2px dashed #ffcc00;">
-<h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
-<div id="memory-levels-game" style="text-align:center;">
-  <button onclick="startLevel(6)">المستوى 1: 6 ازواج</button>
-  <button onclick="startLevel(8)">المستوى 2: 8 ازواج</button>
-  <button onclick="startLevel(10)">المستوى 3: 10 ازواج</button>
-  <div id="level-board" class="board"></div>
-  <p id="level-status" style="font-size:20px; font-weight:bold;"></p>
-</div>
-<style>
-#memory-levels-game button{padding:10px 20px; margin:5px; font-size:16px; background:#ffcc00; border:none; border-radius:10px; cursor:pointer;}
-#memory-levels-game .board{display:grid; gap:10px; justify-content:center; margin:20px auto;}
-#memory-levels-game .card{width:80px; height:80px; background:#fff; border:3px solid #ffcc00; border-radius:15px; font-size:40px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
-#memory-levels-game .card.flipped{background:#ffeeba;}
-#memory-levels-game .card.matched{background:#90ee90; cursor:default;}
+
+  h1 { font-size: 2.2em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 10px; }
+  h2 { font-size: 1.6em; margin: 10px 0; }
+
+  .section-divider {
+    margin: 50px auto;
+    border: none;
+    border-top: 3px dashed #ffcc00;
+    width: 80%;
+  }
+
+  #game1 { margin-bottom: 20px; }
+
+  .level-btn {
+    background: #fff;
+    color: #764ba2;
+    border: none;
+    padding: 10px 22px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform 0.1s;
+  }
+  .level-btn:hover { transform: scale(1.05); }
+  .level-btn.active { background: #ffeb3b; color: #333; }
+
+  .start-btn, .restart-btn {
+    background: #ffeb3b;
+    color: #764ba2;
+    border: none;
+    padding: 13px 35px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    margin: 15px 5px;
+    transition: transform 0.1s;
+  }
+  .start-btn:hover, .restart-btn:hover { transform: scale(1.05); }
+
+  #info1 { font-size: 1.2em; font-weight: bold; margin: 10px 0; }
+
+  #gameBoard {
+    display: none;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px auto;
+    max-width: 700px;
+  }
+
+  .card {
+    width: 110px;
+    height: 110px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s, background 0.2s;
+    color: #764ba2;
+    font-weight: bold;
+    user-select: none;
+  }
+  .card:hover { transform: scale(1.05); }
+  .card.flipped { background: #ffeb3b; color: #333; }
+  .card.matched { background: #90ee90; cursor: default; transform: none; }
+
+  #restart1 { display: none; }
+
+  #game2 { margin: 20px 0; }
+
+  .color-btn {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin: 8px;
+    cursor: pointer;
+    border: 4px solid rgba(255,255,255,0.5);
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: inline-block;
+  }
+  .color-btn:hover { transform: scale(1.12); }
+  .color-btn.selected {
+    border: 5px solid white;
+    box-shadow: 0 0 18px white;
+    transform: scale(1.1);
+  }
+
+  #result-box3 {
+    width: 170px;
+    height: 170px;
+    margin: 20px auto;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    border: 4px dashed #ffcc00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: background 0.5s;
+  }
+
+  .reset-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 8px 22px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 5px;
+    transition: background 0.2s;
+  }
+  .reset-btn:hover { background: rgba(255,255,255,0.35); }
+
+  #game3 { margin: 20px 0; }
+
+  #game3 .lvl-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 15px;
+    background: #ffcc00;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s;
+  }
+  #game3 .lvl-btn:hover { transform: scale(1.05); }
+
+  #level-board {
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+    max-width: 600px;
+  }
+
+  #level-board .lcard {
+    width: 80px;
+    height: 80px;
+    background: rgba(255,255,255,0.9);
+    border: 3px solid #ffcc00;
+    border-radius: 15px;
+    font-size: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  #level-board .lcard.flipped { background: #ffeeba; }
+  #level-board .lcard.matched { background: #90ee90; cursor: default; }
+
+  #level-status { font-size: 1.2em; font-weight: bold; margin: 10px 0; min-height: 30px; }
 </style>
-    <hr style="margin:50px 0; border:2px dashed #ffcc00;">
-<h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
-<div id="memory-levels-game" style="text-align:center;">
-  <button onclick="startLevel(6)">المستوى 1: 6 ازواج</button>
-  <button onclick="startLevel(8)">المستوى 2: 8 ازواج</button>
-  <button onclick="startLevel(10)">المستوى 3: 10 ازواج</button>
-  <div id="level-board" class="board"></div>
-  <p id="level-status" style="font-size:20px; font-weight:bold;"></p>
+</head>
+<body>
+
+<!-- لعبة 1: الذاكرة -->
+<div id="game1">
+  <h1>🎈 لعبة الذاكرة 🎈</h1>
+  <div id="levels1">
+    <p style="margin:10px 0;">اختاري المستوى:</p>
+    <button class="level-btn active" onclick="setLevel(6, this)">سهل - 6 أزواج</button>
+    <button class="level-btn" onclick="setLevel(8, this)">صعب - 8 أزواج</button>
+  </div>
+  <button class="start-btn" onclick="startGame()">ابدأ اللعبة ▶</button>
+  <div id="info1" style="display:none;">
+    النتيجة: <span id="score1">0</span> | الوقت: <span id="time1">0</span> ثانية
+  </div>
+  <div id="gameBoard" style="display:none; flex-wrap:wrap;"></div>
+  <button class="restart-btn" id="restart1" onclick="startGame()">العب مرة أخرى 🔄</button>
 </div>
 
-<style>
-#memory-levels-game button{padding:10px 20px; margin:5px; font-size:16px; background:#ffcc00; border:none; border-radius:10px; cursor:pointer;}
-#memory-levels-game .board{display:grid; gap:10px; justify-content:center; margin:20px auto;}
-#memory-levels-game .card{width:80px; height:80px; background:#fff; border:3px solid #ffcc00; border-radius:15px; font-size:40px; display:flex; align-items:center; justify-content:center; cursor:pointer;}
-#memory-levels-game .card.flipped{background:#ffeeba;}
-#memory-levels-game .card.matched{background:#90ee90; cursor:default;}
-</style>
+<hr class="section-divider">
+
+<!-- لعبة 2: خلط الألوان -->
+<div id="game2">
+  <h2>🎨 لعبة خلط الألوان 🎨</h2>
+  <p style="margin-bottom:15px;">اختاري لونين وشوفي النتيجة</p>
+  <div id="colors">
+    <button class="color-btn" style="background:red"    data-color="red"></button>
+    <button class="color-btn" style="background:yellow" data-color="yellow"></button>
+    <button class="color-btn" style="background:blue"   data-color="blue"></button>
+    <br>
+    <button class="color-btn" style="background:orange" data-color="orange"></button>
+    <button class="color-btn" style="background:green"  data-color="green"></button>
+    <button class="color-btn" style="background:purple" data-color="purple"></button>
+  </div>
+  <div id="result-box3">النتيجة هنا</div>
+  <button class="reset-btn" onclick="resetColors()">🗑 امسح وابدأ من جديد</button>
+</div>
+
+<hr class="section-divider">
+
+<!-- لعبة 3: الذاكرة بالمراحل -->
+<div id="game3">
+  <h2>🍓 لعبة الذاكرة بالمراحل 🍓</h2>
+  <button class="lvl-btn" onclick="startLevel(6)">المستوى 1: 6 أزواج</button>
+  <button class="lvl-btn" onclick="startLevel(8)">المستوى 2: 8 أزواج</button>
+  <button class="lvl-btn" onclick="startLevel(10)">المستوى 3: 10 أزواج</button>
+  <div id="level-board"></div>
+  <p id="level-status"></p>
+</div>
+
 <script>
-const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
-let levelBoard = document.getElementById('level-board');
-let levelStatus = document.getElementById('level-status');
-let levelCards = [];
-let levelFlipped = [];
-let levelCanFlip = false;
+/* لعبة 1 */
+const emojis = ['🐶','🐱','🐭','🐻','🐯','🦊','🐸','🐨','🦁','🐮','🐙','🦋'];
+let level = 6;
+let flippedCards = [];
+let score1 = 0;
+let canFlip = true;
+let timerInterval = null;
+let timer = 0;
 
-function startLevel(pairs){
-  levelBoard.innerHTML = '';
-  levelCards = [];
-  levelFlipped = [];
-  levelCanFlip = false;
-  
-  // نحدد عدد الاعمدة حسب عدد الازواج
-  let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
-  levelBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
-  
-  // نختار الفواكه حسب المرحلة ونكررها
-  let selected = allFruits.slice(0, pairs);
-  let items = [...selected, ...selected].sort(()=>Math.random()-0.5);
-  
-  items.forEach((item)=>{
-    let card = document.createElement('div');
+function setLevel(n, btn) {
+  level = n;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function startGame() {
+  clearInterval(timerInterval);
+  score1 = 0; timer = 0; flippedCards = []; canFlip = true;
+  document.getElementById('score1').innerText = '0';
+  document.getElementById('time1').innerText = '0';
+  document.getElementById('info1').style.display = 'block';
+  document.getElementById('restart1').style.display = 'none';
+  const board = document.getElementById('gameBoard');
+  board.innerHTML = '';
+  board.style.display = 'grid';
+  board.style.gridTemplateColumns = `repeat(4, 110px)`;
+  let selected = emojis.slice(0, level);
+  let items = [...selected, ...selected].sort(() => Math.random() - 0.5);
+  items.forEach(emoji => {
+    const card = document.createElement('div');
     card.className = 'card';
-    card.dataset.item = item;
-    card.innerText = item; // معاينة
-    card.onclick = flipLevelCard;
-    levelBoard.appendChild(card);
-    levelCards.push(card);
+    card.dataset.emoji = emoji;
+    card.innerText = '?';
+    card.addEventListener('click', flipCard);
+    board.appendChild(card);
   });
-  levelStatus.innerText = 'احفظي اماكن الفواكه...';
-  // بعد 3 ثواني نقلب
-  setTimeout(()=>{
-    levelCards.forEach(c=> c.innerText = '?');
-    levelStatus.innerText = 'يلا ابدئي';
-    levelCanFlip = true;
-  }, 3000);
+  timerInterval = setInterval(() => {
+    timer++;
+    document.getElementById('time1').innerText = timer;
+  }, 1000);
 }
-function flipLevelCard(){
-  if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
-  this.innerText = this.dataset.item;
+
+function flipCard() {
+  if (!canFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+  this.innerText = this.dataset.emoji;
   this.classList.add('flipped');
-  levelFlipped.push(this);
-  if(levelFlipped.length === 2){
-    levelCanFlip = false;
-    setTimeout(checkLevelMatch, 600);
-  }
+  flippedCards.push(this);
+  if (flippedCards.length === 2) { canFlip = false; setTimeout(checkMatch, 600); }
 }
-function checkLevelMatch(){
-  let [c1, c2] = levelFlipped;
-  if(c1.dataset.item === c2.dataset.item){
-    c1.classList.add('matched');
-    c2.classList.add('matched');
-    // فوز
-    if(document.querySelectorAll('#memory-levels-game .matched').length === levelCards.length){
-      levelStatus.innerText = '🎉 برافووو خلصتي المرحلة 🎉';
+
+function checkMatch() {
+  const [c1, c2] = flippedCards;
+  if (c1.dataset.emoji === c2.dataset.emoji) {
+    c1.classList.add('matched'); c2.classList.add('matched');
+    score1++; document.getElementById('score1').innerText = score1;
+    flippedCards = []; canFlip = true;
+    if (score1 === level) {
+      clearInterval(timerInterval);
+      setTimeout(() => {
+        alert(`🎉 مبروك! خلصتي اللعبة في ${timer} ثانية!`);
+        document.getElementById('restart1').style.display = 'inline-block';
+      }, 300);
     }
   } else {
-    c1.innerText = '?';
-    c2.innerText = '?';
-    c1.classList.remove('flipped');
-    c2.classList.remove('flipped');
+    setTimeout(() => {
+      c1.classList.remove('flipped'); c2.classList.remove('flipped');
+      c1.innerText = '?'; c2.innerText = '?';
+      flippedCards = []; canFlip = true;
+    }, 500);
   }
-  levelFlipped = [];
-  levelCanFlip = true;
+}
+
+/* لعبة 2 */
+const mix = {
+  "red,yellow":{ name:"برتقالي", hex:"#FFA500" }, "yellow,red":{ name:"برتقالي", hex:"#FFA500" },
+  "red,blue":{ name:"بنفسجي", hex:"#8A2BE2" }, "blue,red":{ name:"بنفسجي", hex:"#8A2BE2" },
+  "yellow,blue":{ name:"أخضر", hex:"#32CD32" }, "blue,yellow":{ name:"أخضر", hex:"#32CD32" },
+  "red,orange":{ name:"برتقالي محمر", hex:"#FF4500" }, "orange,red":{ name:"برتقالي محمر", hex:"#FF4500" },
+  "yellow,orange":{ name:"برتقالي مصفر", hex:"#FFD700" }, "orange,yellow":{ name:"برتقالي مصفر", hex:"#FFD700" },
+  "yellow,green":{ name:"أخضر مصفر", hex:"#ADFF2F" }, "green,yellow":{ name:"أخضر مصفر", hex:"#ADFF2F" },
+  "blue,green":{ name:"تركواز", hex:"#00CED1" }, "green,blue":{ name:"تركواز", hex:"#00CED1" },
+  "blue,purple":{ name:"بنفسجي مزرق", hex:"#4B0082" }, "purple,blue":{ name:"بنفسجي مزرق", hex:"#4B0082" },
+  "red,purple":{ name:"بنفسجي محمر", hex:"#C71585" }, "purple,red":{ name:"بنفسجي محمر", hex:"#C71585" },
+  "orange,green":{ name:"بني دافئ", hex:"#8B6914" }, "green,orange":{ name:"بني دافئ", hex:"#8B6914" },
+  "orange,purple":{ name:"بني محمر", hex:"#6B2A1A" }, "purple,orange":{ name:"بني محمر", hex:"#6B2A1A" },
+  "green,purple":{ name:"بني مخضر", hex:"#4A5A2A" }, "purple,green":{ name:"بني مخضر", hex:"#4A5A2A" },
+};
+let selectedColors = [];
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', function () {
+    if (selectedColors.length >= 2 || selectedColors.includes(this.dataset.color)) return;
+    selectedColors.push(this.dataset.color);
+    this.classList.add('selected');
+    if (selectedColors.length === 2) {
+      const result = mix[selectedColors.join(',')];
+      const box = document.getElementById('result-box3');
+      if (result) { box.style.background = result.hex; box.style.color = '#fff'; box.innerText = result.name; }
+      else { box.style.background = 'rgba(255,255,255,0.1)'; box.style.color = '#ffe'; box.innerText = 'ما في خلط لهالونين!'; }
+    }
+  });
+});
+function resetColors() {
+  selectedColors = [];
+  document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+  const box = document.getElementById('result-box3');
+  box.style.background = 'rgba(255,255,255,0.15)';
+  box.style.color = 'white';
+  box.innerText = 'النتيجة هنا';
+}
+
+/* لعبة 3 */
+const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭'];
+let levelCards = [], levelFlipped = [], levelCanFlip = false, levelMatchedCount = 0, levelTotal = 0;
+
+function startLevel(pairs) {
+  const board = document.getElementById('level-board');
+  const status = document.getElementById('level-status');
+  board.innerHTML = ''; levelCards = []; levelFlipped = []; levelCanFlip = false;
+  levelMatchedCount = 0; levelTotal = pairs;
+  let cols = pairs <= 6 ? 4 : pairs <= 8 ? 4 : 5;
+  board.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+  let items = [...allFruits.slice(0, pairs), ...allFruits.slice(0, pairs)].sort(() => Math.random() - 0.5);
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'lcard'; card.dataset.item = item; card.innerText = item;
+    card.addEventListener('click', flipLevelCard);
+    board.appendChild(card); levelCards.push(card);
+  });
+  status.innerText = '👀 احفظي أماكن الفواكه...';
+  setTimeout(() => { levelCards.forEach(c => c.innerText = '?'); status.innerText = '⏱ يلا ابدئي!'; levelCanFlip = true; }, 3000);
+}
+
+function flipLevelCard() {
+  if (!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+  this.innerText = this.dataset.item; this.classList.add('flipped'); levelFlipped.push(this);
+  if (levelFlipped.length === 2) { levelCanFlip = false; setTimeout(checkLevelMatch, 600); }
+}
+
+function checkLevelMatch() {
+  const [c1, c2] = levelFlipped;
+  const status = document.getElementById('level-status');
+  if (c1.dataset.item === c2.dataset.item) {
+    c1.classList.add('matched'); c2.classList.add('matched'); levelMatchedCount++;
+    status.innerText = levelMatchedCount === levelTotal ? '🎉 برافو! خلصتي المرحلة كلها! 🎉' : `✅ صح! باقي ${levelTotal - levelMatchedCount} زوج`;
+  } else {
+    c1.innerText = '?'; c2.innerText = '?';
+    c1.classList.remove('flipped'); c2.classList.remove('flipped');
+    status.innerText = '❌ حاولي مرة ثانية!';
+  }
+  levelFlipped = []; levelCanFlip = true;
 }
 </script>
+
 </body>
-  </html>
+</html>
