@@ -34,13 +34,9 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 <div id="info"><p>النتيجة: <span id="score">0</span> | الوقت: <span id="time">0</span> ثانية</p></div>
 <div class="game-board" id="gameBoard"></div>
 <button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
-<script>
-let level = 6;let emojis = ['🍎','🍌','🍇','🍓','🍊','🍉','🥝','🍍'];let cards = [];const board = document.getElementById('gameBoard');let flippedCards = [];let score = 0;let canFlip = true;let timer = 0;let timerInterval;
-function setLevel(l) {level = l;document.querySelectorAll('.level-btn').forEach(b=>b.style.background='#fff');event.target.style.background='#ffeb3b';}
-function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0;canFlip = true;clearInterval(timerInterval);document.getElementById('info').style.display = 'block';document.getElementById('score').innerText = 0;document.getElementById('time').innerText = 0;document.querySelector('.start-btn').style.display = 'none';document.querySelector('#levels').style.display = 'none';document.querySelector('.restart-btn').style.display = 'none';board.style.display = 'grid';let gameEmojis = emojis.slice(0, level);cards = [...gameEmojis,...gameEmojis].sort(() => Math.random() - 0.5);cards.forEach((emoji) => {const card = document.createElement('div');card.classList.add('card');card.dataset.emoji = emoji;card.innerHTML = '?';card.onclick = () => flipCard(card);board.appendChild(card);});timerInterval = setInterval(()=> {timer++;document.getElementById('time').innerText = timer;}, 1000);}
-function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
-function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
+() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
 </script>
+  
 <h1>🎨 لعبة خلط الالوان 🎨</h1>
 <p>اختاري لونين مع بعض و شوفي النتيجة</p>
 
