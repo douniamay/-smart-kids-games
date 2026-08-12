@@ -1,4 +1,5 @@
 
+HTML
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -15,88 +16,59 @@ h1 { font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 .card.flipped { background: #ffeb3b; }
 #info { font-size: 1.3em; font-weight: bold; display: none; }
 .restart-btn { display: none; }
+
+.color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:3px solid #ddd; transition:0.2s}
+.color-btn:hover{transform:scale(1.1)}
+#result-box3{
+  width:180px; height:180px; margin:20px auto; background:#ffffff;
+  border-radius:20px; font-weight:bold; font-size:20px; border:4px dashed #ffcc00;
+  display:flex; align-items:center; justify-content:center; color:#333;
+}
+.game-container{margin:40px 0;}
 </style>
 </head>
 <body>
 <h1>🎈 عالم الألعاب الذكية 🎈</h1>
-<div id="levels"><p>اختاري المستوى:</p><button class="level-btn" onclick="setLevel(6)">سهل - 6 أزواج</button><button class="level-btn" onclick="setLevel(8)">صعب - 8 أزواج</button></div>
+
+<div id="levels"><p>اختاري المستوى:</p>
+<button class="level-btn" onclick="setLevel(6)">سهل - 6 أزواج</button>
+<button class="level-btn" onclick="setLevel(8)">صعب - 8 أزواج</button>
+</div>
 <button class="start-btn" onclick="startGame()">ابدأ اللعبة</button>
 <div id="info"><p>النتيجة: <span id="score">0</span> | الوقت: <span id="time">0</span> ثانية</p></div>
 <div class="game-board" id="gameBoard"></div>
 <button class="restart-btn" onclick="startGame()">العب مرة أخرى 🔄</button>
+
 <script>
-    let selected3 = [];
-    const mix3 = {
-      "red,orange": "red-orange", "orange,red": "red-orange",
-      "red,purple": "red-purple", "purple,red": "red-purple",
-      "yellow,orange": "yellow-orange", "orange,yellow": "yellow-orange",
-      "yellow,green": "yellow-green", "green,yellow": "yellow-green",
-      "blue,green": "blue-green", "green,blue": "blue-green",
-      "blue,purple": "blue-purple", "purple,blue": "blue-purple"
-    };
+let level = 6;let emojis = ['🍎','🍌','🍇','🍓','🍊','🍉','🥝','🍍'];let cards = [];const board = document.getElementById('gameBoard');let flippedCards = [];let score = 0;let canFlip = true;let timer = 0;let timerInterval;
+function setLevel(l) {level = l;document.querySelectorAll('.level-btn').forEach(b=>b.style.background='#fff');event.target.style.background='#ffeb3b';}
+function startGame() {board.innerHTML = '';flippedCards = [];score = 0;timer = 0;canFlip = true;clearInterval(timerInterval);document.getElementById('info').style.display = 'block';document.getElementById('score').innerText = 0;document.getElementById('time').innerText = 0;document.querySelector('.start-btn').style.display = 'none';document.querySelector('#levels').style.display = 'none';document.querySelector('.restart-btn').style.display = 'none';board.style.display = 'grid';let gameEmojis = emojis.slice(0, level);cards = [...gameEmojis,...gameEmojis].sort(() => Math.random() - 0.5);cards.forEach((emoji) => {const card = document.createElement('div');card.classList.add('card');card.dataset.emoji = emoji;card.innerHTML = '?';card.onclick = () => flipCard(card);board.appendChild(card);});timerInterval = setInterval(()=> {timer++;document.getElementById('time').innerText = timer;}, 1000);}
+function flipCard(card) {if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped')) return;card.classList.add('flipped');card.innerHTML = card.dataset.emoji;flippedCards.push(card);if (flippedCards.length === 2) {canFlip = false;setTimeout(checkMatch, 800);}}
+function checkMatch() {if (flippedCards[0].dataset.emoji === flippedCards[1].dataset.emoji) {score++;document.getElementById('score').innerText = score;flippedCards = [];canFlip = true;if(score === level) {clearInterval(timerInterval);setTimeout(() => {alert(`مبروك كسبتي! 🎉\nالوقت: ${timer} ثانية`);document.querySelector('.restart-btn').style.display = 'inline-block';}, 300);}} else {setTimeout(() => {flippedCards.forEach(card => {card.classList.remove('flipped');card.innerHTML = '?';});flippedCards = [];canFlip = true;}, 500);}}
+</script>
 
-    const colorCode = {
-      "red-orange": "#FF4500", "red-purple": "#C71585",
-      "yellow-orange": "#FFA500", "yellow-green": "#ADFF2F",
-      "blue-green": "#00CED1", "blue-purple": "#8A2BE2"
-    };
-
-    document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=>{
-      btn.onclick = () => {
-        if(selected3.length < 2){
-          selected3.push(btn.dataset.color);
-          btn.style.border = "4px solid black";
-          btn.style.opacity = "0.7";
-        }
-        if(selected3.length === 2){
-          let key = selected3.join(',');
-          let colorName = mix3[key] || "غير متاح";
-          let colorValue = colorCode[colorName] || "#ccc";
-          document.getElementById('result-box3').style.background = colorValue;
-          document.getElementById('result-box3').innerText = colorName;
-          document.getElementById('result-box3').style.color = "#fff";
-        }
-      }
-    });
-
-    function resetColors3(){
-      selected3 = [];
-      document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-btn').forEach(btn=> {
-        btn.style.border = "3px solid #ddd";
-        btn.style.opacity = "1";
-      });
-      document.getElementById('result-box3').style.background = "#ffffff";
-      document.getElementById('result-box3').innerText = "النتيجة هنا";
-      document.getElementById('result-box3').style.color = "#333";
-    }
-    </script>
-<style>
-.color-btn{width:80px; height:80px; border-radius:50%; margin:10px; cursor:pointer; border:none}
-#result-box{width:150px; height:150px; margin:20px auto; background:#eee; display:flex; align-items:center; justify-content:center; border-radius:15px; font-weight:bold}
-</style>
-    
-<h1>🎨 لعبة الالوان الثلاثية 🎨</h1>
+<!-- لعبة الالوان الثلاثية -->
+<div class="game-container">
+<h2>🎨 لعبة الالوان الثلاثية</h2>
 <p>اختاري لون اساسي + لون ثانوي</p>
-
-<h3>الوان الاساسية</h3>
+<h4>الوان الاساسية</h4>
 <div id="primary-colors">
 <button class="color-btn" style="background:red" data-color="red"></button>
 <button class="color-btn" style="background:yellow" data-color="yellow"></button>
 <button class="color-btn" style="background:blue" data-color="blue"></button>
 </div>
-
-<h3>الالوان الثانوية</h3>
+<h4>الوان الثانوية</h4>
 <div id="secondary-colors">
 <button class="color-btn" style="background:orange" data-color="orange"></button>
 <button class="color-btn" style="background:green" data-color="green"></button>
 <button class="color-btn" style="background:purple" data-color="purple"></button>
 </div>
-
 <div id="result-box3">النتيجة هنا</div>
 <button onclick="resetColors3()">امسح</button>
+</div>
 
 <script>
-// الكود هنا تحت الـ HTML عشان يلاقي الازرار
+// الكود هنا تحت عشان يلاقي الازرار
 let selected3 = [];
 const mix3 = {
   "red,orange": "برتقالي", "orange,red": "برتقالي",
@@ -120,9 +92,8 @@ document.querySelectorAll('#primary-colors.color-btn, #secondary-colors.color-bt
     }
     if(selected3.length === 2){
       let key = selected3.join(',');
-      let colorName = mix3[key] || "اللون غير موجود";
+      let colorName = mix3[key] || "مفيش خلط";
       let colorValue = colorCode[colorName] || "#ccc";
-
       document.getElementById('result-box3').style.background = colorValue;
       document.getElementById('result-box3').innerText = colorName;
       document.getElementById('result-box3').style.color = "white";
@@ -140,22 +111,6 @@ function resetColors3(){
   document.getElementById('result-box3').style.color = "#333";
 }
 </script>
-<style>
-.color-btn{width:80px; height:80px; border-radius:50%; margin:8px; cursor:pointer; border:3px solid #ddd}
-#result-box3{
-  width:180px;
-  height:180px;
-  margin:20px auto;
-  background:#ffffff;
-  border-radius:20px;
-  font-weight:bold;
-  font-size:20px;
-  border:4px dashed #ffcc00;
-  text-align:center;
-  line-height:180px;
-  color:#333;
-}
-</style>
-    
+
 </body>
 </html>
