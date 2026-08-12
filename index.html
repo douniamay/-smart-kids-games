@@ -122,7 +122,6 @@ function resetColors(){
 </style>
     <hr style="margin:50px 0; border:2px dashed #ffcc00;">
 <h2 style="text-align:center;">🍓 لعبة الذاكرة بالمراحل 🍓</h2>
-
 <div id="memory-levels-game" style="text-align:center;">
   <button onclick="startLevel(6)">المستوى 1: 6 ازواج</button>
   <button onclick="startLevel(8)">المستوى 2: 8 ازواج</button>
@@ -138,7 +137,6 @@ function resetColors(){
 #memory-levels-game .card.flipped{background:#ffeeba;}
 #memory-levels-game .card.matched{background:#90ee90; cursor:default;}
 </style>
-
 <script>
 const allFruits = ['🍓','🍎','🍌','🍇','🍉','🍊','🥝','🍑','🍍','🥭']; // 10 فواكه
 let levelBoard = document.getElementById('level-board');
@@ -170,7 +168,6 @@ function startLevel(pairs){
     levelBoard.appendChild(card);
     levelCards.push(card);
   });
-
   levelStatus.innerText = 'احفظي اماكن الفواكه...';
   // بعد 3 ثواني نقلب
   setTimeout(()=>{
@@ -179,20 +176,16 @@ function startLevel(pairs){
     levelCanFlip = true;
   }, 3000);
 }
-
 function flipLevelCard(){
   if(!levelCanFlip || this.classList.contains('flipped') || this.classList.contains('matched')) return;
-  
   this.innerText = this.dataset.item;
   this.classList.add('flipped');
   levelFlipped.push(this);
-
   if(levelFlipped.length === 2){
     levelCanFlip = false;
     setTimeout(checkLevelMatch, 600);
   }
 }
-
 function checkLevelMatch(){
   let [c1, c2] = levelFlipped;
   if(c1.dataset.item === c2.dataset.item){
@@ -212,6 +205,5 @@ function checkLevelMatch(){
   levelCanFlip = true;
 }
 </script>
-
 </body>
   </html>
